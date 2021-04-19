@@ -1,11 +1,31 @@
 spring:
-  security:
-    user:
-      name: user
-      password: 1111
+  #security:
+  #  user:
+  #    name: user
+  #    password: 1111
 
   datasource:
-    url: 
+    url:
     driver-class-name:
     username:
     password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  thymeleaf:
+    cache: false
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
