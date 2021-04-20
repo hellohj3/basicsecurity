@@ -1,6 +1,7 @@
 package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
+import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import io.security.basicsecurity.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login_proc")
                 .authenticationDetailsSource(authenticationDetailsSource)
                 .defaultSuccessUrl("/")
+                .successHandler(authenticationSuccessHandler)
                 .permitAll();
     }
 }
