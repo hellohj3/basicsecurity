@@ -1,14 +1,9 @@
 spring:
-  #security:
-  #  user:
-  #    name: user
-  #    password: 1111
-
   datasource:
-    url:
-    driver-class-name:
-    username:
+    url: jdbc:h2:tcp://localhost/~/basicsecurity
+    username: sa
     password:
+    driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
@@ -20,6 +15,7 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
   thymeleaf:
     cache: false
