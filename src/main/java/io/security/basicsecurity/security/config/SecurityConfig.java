@@ -1,5 +1,6 @@
-package io.security.basicsecurity.security;
+package io.security.basicsecurity.security.config;
 
+import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import io.security.basicsecurity.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public CustomAuthenticationProvider authenticationProvider() {
+        return new CustomAuthenticationProvider();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 커스텀 UserDetailsService 등록
-        auth.userDetailsService(userDetailsService);
+        // auth.userDetailsService(userDetailsService);         // CustomAuthenticationProvider 에서 CustomUserDetailsService 를 사용하므로 삭제
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
