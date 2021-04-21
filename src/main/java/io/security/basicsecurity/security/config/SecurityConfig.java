@@ -8,7 +8,6 @@ import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHan
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import io.security.basicsecurity.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomUserDetailsService userDetailsService;
+    // private final CustomUserDetailsService userDetailsService;
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
     private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler authenticationFailureHandler;
@@ -99,6 +98,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler())
             .and()
                 .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        // Cross Site Request Forgery 관련기능 비활성화
         http.csrf().disable();
     }
 }
