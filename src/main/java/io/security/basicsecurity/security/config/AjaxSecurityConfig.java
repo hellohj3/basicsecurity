@@ -58,6 +58,16 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
         return new AjaxAccessDeniedHandler();
     }
 
+    private void ajaxConfigurer(HttpSecurity http) throws Exception {
+        http
+                .apply(new AjaxLoginConfigurer<>())
+                .successHandlerAjax(ajaxAuthenticationSuccessHandler())
+                .failureHandlerAjax(ajaxAuthenticationFailureHandler())
+                .loginPage("/api/login")
+                .loginProcessingUrl("/api/login")
+                .setAuthenticationManager(authenticationManagerBean());
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(ajaxAuthenticationProvider());
@@ -69,6 +79,7 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatcher("/api/**")      // /api 로 호출되는 경우에만 해당 설정을 사용한다
                 .authorizeRequests()
                 .antMatchers("/api/messages").hasRole("MANAGER")
+                .antMatchers("/api/login").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -79,6 +90,8 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(ajaxAccessDeniedHandler());
 
         // Cross Site Request Forgery 관련기능 비활성화
-        http.csrf().disable();
+        // http.csrf().disable();
+
+        ajaxConfigurer(http);
     }
 }
