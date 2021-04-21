@@ -1,18 +1,19 @@
 package io.security.basicsecurity.security.provider;
 
 import io.security.basicsecurity.security.common.FormWebAuthenticationDetails;
+import io.security.basicsecurity.security.token.AjaxAuthenticationToken;
 import io.security.basicsecurity.service.AccountContext;
 import io.security.basicsecurity.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -32,15 +33,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("BadCredentialsException");
         }
 
-        // FormAuthenticationDetails 관련 테스트코드
-        FormWebAuthenticationDetails formWebAuthenticationDetails = (FormWebAuthenticationDetails) authentication.getDetails();
-        String secretKey = formWebAuthenticationDetails.getSecretKey();
-        if (secretKey == null || !"secret".equals(secretKey)) {
-            throw new InsufficientAuthenticationException("InsufficientAuthenticationException");
-        }
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
+        AjaxAuthenticationToken authenticationToken =
+                new AjaxAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
 
         return authenticationToken;
     }
@@ -48,8 +42,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         // 파라매터의 타입과 CustomAuthenticationProvider 의 토큰의 타입 일치 여부를 반환
-        //return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return authentication.equals(AjaxAuthenticationToken.class);
     }
-
 }
