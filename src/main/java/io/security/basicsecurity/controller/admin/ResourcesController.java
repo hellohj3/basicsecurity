@@ -4,10 +4,12 @@ import io.security.basicsecurity.domain.dto.ResourcesDto;
 import io.security.basicsecurity.domain.entity.Resources;
 import io.security.basicsecurity.domain.entity.Role;
 import io.security.basicsecurity.repository.RoleRepository;
+import io.security.basicsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.security.basicsecurity.service.ResourcesService;
 import io.security.basicsecurity.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,9 @@ public class ResourcesController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
+
     @GetMapping(value="/admin/resources")
     public String getResources(Model model) throws Exception {
 
@@ -50,6 +55,7 @@ public class ResourcesController {
         resources.setRoleSet(roles);
 
         resourcesService.createResources(resources);
+        urlFilterInvocationSecurityMetadataSource.reload();
 
         return "redirect:/admin/resources";
     }
@@ -88,6 +94,7 @@ public class ResourcesController {
 
         Resources resources = resourcesService.getResources(Long.valueOf(id));
         resourcesService.deleteResources(Long.valueOf(id));
+        urlFilterInvocationSecurityMetadataSource.reload();
 
         return "redirect:/admin/resources";
     }

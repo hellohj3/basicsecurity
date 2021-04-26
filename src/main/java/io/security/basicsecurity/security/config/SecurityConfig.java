@@ -84,8 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() throws Exception {
-        return new UrlFilterInvocationSecurityMetadataSource(urlResourcesMapFactoryBean().getObject());
+    public UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() throws Exception {
+        return new UrlFilterInvocationSecurityMetadataSource(urlResourcesMapFactoryBean().getObject(), securityResourceService);
     }
 
     private UrlResourcesMapFactoryBean urlResourcesMapFactoryBean() {
@@ -124,11 +124,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 // 여기는 원래 있던 FilterSecurityInterceptor 가 처리하는 부분 - Start
-                .antMatchers("/","/users","/login**").permitAll()
+                /*.antMatchers("/","/users","/login**").permitAll()
                 .antMatchers("/mypage").hasRole("USER")
                 .antMatchers("/messages").hasRole("MANAGER")
                 .antMatchers("/config").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().authenticated()*/
                 // 여기는 원래 있던 FilterSecurityInterceptor 가 처리하는 부분 - End (UrlMetadataSource + PermitAllFilter 사용하면 삭제되어도 됨)
             .and()
                 .formLogin()
