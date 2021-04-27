@@ -2,6 +2,7 @@ package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
 import io.security.basicsecurity.security.factory.UrlResourcesMapFactoryBean;
+import io.security.basicsecurity.security.filter.PermitAllFilter;
 import io.security.basicsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
@@ -51,6 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAuthenticationFailureHandler authenticationFailureHandler;
     private final SecurityResourceService securityResourceService;
 
+    // permitAll 시켜야하는 자원들
+    private String[] permitAllResources = {"/","/login","/user/login/**","/css/**","/images/**","/js/**"};
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -75,12 +79,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Url 기반 권한요청을 위한 Filter 추가작업 - Start
     @Bean
-    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+
+        // PermitAllFilter 이전버전
+        /*FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
         filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
         filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
         filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
-        return filterSecurityInterceptor;
+        return filterSecurityInterceptor;*/
+
+        // PermitAllFilter 적용버전
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
+        return permitAllFilter;
     }
 
     @Bean

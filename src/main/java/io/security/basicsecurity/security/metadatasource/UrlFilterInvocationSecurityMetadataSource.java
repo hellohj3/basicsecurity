@@ -67,6 +67,5 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
             Map.Entry<RequestMatcher, List<ConfigAttribute>> entry = iterator.next();
             requestMap.put(entry.getKey(), entry.getValue());
         }
-        System.out.println("end");
     }
 }
