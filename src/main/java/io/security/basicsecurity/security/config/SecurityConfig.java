@@ -8,6 +8,7 @@ import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHan
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.basicsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
+import io.security.basicsecurity.security.voter.IpAddressVoter;
 import io.security.basicsecurity.service.SecurityResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -113,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDecisionManager affirmativeBased() {
+        // 접근 결정 관리자
         AffirmativeBased affirmativeBased = new AffirmativeBased(getAccessDecisionVoters());
         return affirmativeBased;
     }
@@ -121,8 +123,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Hierarchy 이전
         // return Arrays.asList(new RoleVoter());
 
-        // Hierarchy 적용
+        // ip 접근제한 적용 - 가장 먼저 와야됨 이게 우선(ACCESS_GRANTED 가 전에 나와버리면 그다음 보터가 심의 못하기 때문)
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+        accessDecisionVoters.add(new IpAddressVoter(securityResourceService));
+
+        // Hierarchy 적용
         accessDecisionVoters.add(roleVoter());
 
         return accessDecisionVoters;

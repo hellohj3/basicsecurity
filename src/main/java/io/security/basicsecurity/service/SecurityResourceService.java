@@ -1,7 +1,10 @@
 package io.security.basicsecurity.service;
 
+import io.security.basicsecurity.domain.entity.AccessIp;
 import io.security.basicsecurity.domain.entity.Resources;
+import io.security.basicsecurity.repository.AccessIpRepository;
 import io.security.basicsecurity.repository.ResourcesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -10,10 +13,15 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SecurityResourceService {
 
+    @Autowired
     private ResourcesRepository resourcesRepository;
+
+    @Autowired
+    private AccessIpRepository accessIpRepository;
 
     public SecurityResourceService(ResourcesRepository resourcesRepository) {
         this.resourcesRepository = resourcesRepository;
@@ -31,5 +39,10 @@ public class SecurityResourceService {
             });
         });
         return result;
+    }
+
+    public List<String> getAccessIpList() {
+        List<String> accessIpList = accessIpRepository.findAll().stream().map(accessIp -> accessIp.getIpAddress()).collect(Collectors.toList());
+        return accessIpList;
     }
 }
