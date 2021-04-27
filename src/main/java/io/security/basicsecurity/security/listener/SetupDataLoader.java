@@ -1,6 +1,8 @@
 package io.security.basicsecurity.security.listener;
 
+import io.security.basicsecurity.domain.entity.RoleHierarchy;
 import io.security.basicsecurity.repository.ResourcesRepository;
+import io.security.basicsecurity.repository.RoleHierarchyRepository;
 import io.security.basicsecurity.repository.RoleRepository;
 import io.security.basicsecurity.repository.UserRepository;
 import io.security.basicsecurity.domain.entity.Account;
@@ -34,6 +36,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleHierarchyRepository roleHierarchyRepository;
+
     private static AtomicInteger count = new AtomicInteger(0);
 
     @Override
@@ -57,7 +62,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         roles.add(adminRole);
         createResourceIfNotFound("/admin/**", "", roles, "url");
         Account account = createUserIfNotFound("admin", "pass", "admin@gmail.com", 10,  roles);
-        
+
 //        Set<Role> roles1 = new HashSet<>();
 //
 //        Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
