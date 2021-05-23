@@ -41,6 +41,7 @@ import java.util.ResourceBundle;
 
 /**
  * 폼 로그인 관련 설정 클래스
+ * 브랜치 생성
  *
  * @author 박상재
  * @version 1.0
