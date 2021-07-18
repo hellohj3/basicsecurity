@@ -19,6 +19,9 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPage() {
+
+        userService.order();
+
         return "user/mypage";
     }
 
